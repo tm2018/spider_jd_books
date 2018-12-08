@@ -12,13 +12,14 @@ jd_book_sort_url = "https://book.jd.com/booksort.html"
 book_nav_html = getJdBookUrlFun(jd_book_sort_url).decode("gbk").encode("utf-8")
 
 def getBookNav1():
+        a = book_nav_html
+        print "a=%s" %a
         # print  book_nav_html
         #正则表达式，本程序用xpath
         # pattern = re.compile(r'<dt><a href="(.*?)">(.*?)</a><b></b></dt>' r'<dd><em><a href="(.*?)">(.*?)</a></em></dd>')
         # book_nav1_name = pattern.findall(book_nav_html)
-
-        selector = etree.HTML(book_nav_html)
-        content = selector.xpath('//*[@id="booksort"]/div[2]/dl/dt/text()')
+        selector = etree.HTML(a)
+        content = selector.xpath("//*[@id='booksort']/div[2]/dl/dd[1]/em[1]/a/text()")
         print content
 
         # # print book_nav1_name
