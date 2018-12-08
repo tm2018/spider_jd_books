@@ -1,8 +1,12 @@
-#coding: utf-8
-
+#coding:utf-8
 import re
-from functions.open_jd import getJdBookUrlFun
+str = "//list.jd.com/1713-4855-4881.html"
+def combine_url(str):
+    pattern = re.compile("\d+-\d+-\d+")
+    cat_resoure = pattern.findall(str)[0]
+    cat_list = cat_resoure.split("-")
+    cat = ",".join(cat_list)
+    tid = cat_list[-1]
+    return {"cat":cat,"tid":tid}
 
-jd_book_url = "https://book.jd.com/"
-
-print getJdBookUrlFun(jd_book_url).decode("gbk").encode("utf-8")
+print combine_url(str)

@@ -22,7 +22,7 @@ def getJdUrlFun(url):
         return res
 
 #定义一个函数访问京东图书
-def getJdBookUrlFun(url=""):
+def getJdBookSortUrlFun(url=""):
     #假装访问京东主页
     getJdUrlFun(jd_book_url)
     headers = {
@@ -34,6 +34,17 @@ def getJdBookUrlFun(url=""):
     res = res_data.read()
     res_data.close()
     return res
+
+def getNav2HtmlFun(url=""):
+        headers = {
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
+            "referer": "https://book.jd.com/booksort.html"
+        }
+        req = urllib2.Request(url, headers=headers)
+        res_data = urllib2.urlopen(req, timeout=10)
+        res = res_data.read()
+        res_data.close()
+        return res
 
 # print getJdBookUrlFun(jd_book_url).decode("gbk").encode("utf-8")
 
