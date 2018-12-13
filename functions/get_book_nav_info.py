@@ -33,11 +33,3 @@ def getBookNav():
                         nav2_name:nav2_url
                 }
                 yield nav2_name_url
-
-
-
-
-# b = getBookNav()
-# for i in b:
-#         for k in i:
-#                 print k,i[k]

@@ -1,9 +1,19 @@
 #coding:utf-8
 ###这个文件是对二级分类下书籍信息进行处理，获取我们需要的数据
 from get_book_nav_info import getBookNav
-from spider_jd import getNav2HtmlFun
+from spider_jd import getNav2HtmlFun,getBookHtml
 from lxml import etree
 import re
+import sys
+
+##测试乱码
+reload(sys)
+sys.setdefaultencoding('utf-8')
+#获得系统编码格式
+type = sys.getfilesystemencoding()
+#将网页以utf-8格式解析然后转换为系统默认格式
+
+
 
 #处理下获取到的url_str字符串，返回最终访问京东的合适的url
 def combine_url(url_str):
@@ -20,23 +30,38 @@ for i in b:
         for k in i:
                 # print k,i[k]
                 urls = map(combine_url,i[k])
-                print urls
+                # print urls
 
-a = getNav2HtmlFun('https://list.jd.com/list.html?cat=1713,3285,3760&tid=3760')
+a ='https://list.jd.com/list.html?cat=1713,3285,3760&tid=3760'
 # print a
 
-def get_nav2_book_info(html):
+#根据html取出下一页地址和提取书籍相关信息
+def get_nav2_book_info(url):
+        html = getNav2HtmlFun(url)
         tree = etree.HTML(html)
-        next_page = tree.xpath("//*[@id='J_bottomPage']/span[1]/a[10]/@href")
-        # if next_page:
+        next_page_list = tree.xpath('//*[@id="J_bottomPage"]/span[@class="p-num"]/a[@class="pn-next"]/@href')
+        #图书信息可以点击“更多”进去查看，bookmore_url是他的url
+        bookmore_url = tree.xpath('//*[@id="plist"]/ul/li/div/div[@class="p-name"]/a/@href')
+        print html
+        #把url组合起来
+        bookmore_spider_url = "%s%s" %("https:",bookmore_url[0])
+        #这里访问书籍信息时，假装从当前的url跳转过去，所以以当前url伪装成referer
+        book_html = getBookHtml(bookmore_url,url)
+        selector = etree.HTML(book_html)
+        # print book_html
 
-        # books_url = tree.xpath("//*[@id='plist']/ul/li/div/div[3]/a/@href")
-        # for book_url in books_url:
-        #         xpath_pattern = "//*[@id='plist']/ul/li/div/div[3]/a[@href='%s']/em/text()" %book_url
-        #         book_name = tree.xpath(xpath_pattern)
-        #         print book_name[0],book_url
+        book_name = tree.xpath("//*[@id='jd-price']/text()")
+        print book_name
+        try:
+            if next_page_list[0]:
+                    next_page = "%s%s" %("https://list.jd.com",next_page_list[0])
+                    print "next_page is :%s" %next_page
+            else:
+                    print "next_page is null!"
+        except Exception as e:
+                    print "there is an error when get next_page!error_info:%s" %e
 get_nav2_book_info(a)
-# combine_url(url_str)
+
 
 
 
