@@ -2,9 +2,13 @@
 
 import urllib2
 import chardet
-# import sys
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 
 #定义url
 jd_book_url = "https://book.jd.com/"
@@ -50,26 +54,19 @@ def getNav2HtmlFun(url=""):
 
 # print getJdBookUrlFun(jd_book_url).decode("gbk").encode("utf-8")
 
-#获取每本图书的html，其中需要传入referer和url
-def getBookHtml(url,referer):
-    headers = {
-        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
-        "referer": referer
-    }
-    print headers
-    req = urllib2.Request(url, headers=headers)
+#用selenium.webdriver模拟浏览器访问，获取相关信息
+def getBookHtml(url):
+    # desired_capabilities = DesiredCapabilities.CHROME  # 修改页面加载策略
+    # desired_capabilities["pageLoadStrategy"] = "none"  # 这个值表示只加载html，不加载动态获取的内容如js ajax等
+    browser = webdriver.Chrome()
+    browser.get(url)
+    # browser.set_page_load_timeout(1)
+    #让webdriver等待，直到获取到了价格
+    WebDriverWait(browser, 1).until(EC.presence_of_element_located((By.XPATH, '//strong[@id="jd-price"]')))
+    # browser.switch_to.frame(frame)
+    price = browser.find_element_by_xpath('//strong[@id="jd-price"]')
+    print price.text
 
-    res_data = urllib2.urlopen(req, timeout=10)
-
-    res = res_data.read()
-    # print chardet.detect(res)
-    if isinstance(res,unicode):
-            print "res is unicode!"
-    # else:
-    #         print res
-    print res
-    res_data.close()
-    return res
 
 
 

@@ -42,13 +42,11 @@ def get_nav2_book_info(url):
         next_page_list = tree.xpath('//*[@id="J_bottomPage"]/span[@class="p-num"]/a[@class="pn-next"]/@href')
         #图书信息可以点击“更多”进去查看，bookmore_url是他的url
         bookmore_url = tree.xpath('//*[@id="plist"]/ul/li/div/div[@class="p-name"]/a/@href')
-        print html
         #把url组合起来
         bookmore_spider_url = "%s%s" %("https:",bookmore_url[0])
         #这里访问书籍信息时，假装从当前的url跳转过去，所以以当前url伪装成referer
-        book_html = getBookHtml(bookmore_url,url)
-        selector = etree.HTML(book_html)
-        # print book_html
+        book_html = getBookHtml(bookmore_spider_url)
+        print bookmore_spider_url
 
         book_name = tree.xpath("//*[@id='jd-price']/text()")
         print book_name
@@ -60,7 +58,7 @@ def get_nav2_book_info(url):
                     print "next_page is null!"
         except Exception as e:
                     print "there is an error when get next_page!error_info:%s" %e
-get_nav2_book_info(a)
+get_nav2_book_info('https://list.jd.com/list.html?cat=1713,3285,3760&tid=3760')
 
 
 
