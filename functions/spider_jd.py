@@ -62,7 +62,7 @@ def getBookHtml(url):
     browser.get(url)
     # browser.set_page_load_timeout(1)
     #让webdriver等待，直到获取到了价格
-    WebDriverWait(browser, 1).until(EC.presence_of_element_located((By.XPATH, '//strong[@id="jd-price"]')))
+    WebDriverWait(browser, 0).until(EC.presence_of_element_located((By.XPATH, '//strong[@id="jd-price"]')))
     # browser.switch_to.frame(frame)
     price = browser.find_element_by_xpath('//strong[@id="jd-price"]')
     print price.text
